@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will you be my Valentine?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background-color: #f7f6f3;
+      color: #37352f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 480px;
+    }
+
+    .greeting,
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .greeting {
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      min-height: 44px;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #f1f1ef;
+      color: #37352f;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn:hover {
+      background-color: #e9e9e7;
+    }
+
+    .btn-no {
+      transition: left 0.15s ease, top 0.15s ease;
+    }
+
+    .btn-no.escaping {
+      position: fixed;
+    }
+
+    .success {
+      display: none;
+      opacity: 0;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .success.visible {
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .success h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="initial-state">
+      <p class="greeting">Dear Sara,</p>
+      <h1>Will you be my Valentine? 🌹</h1>
+      <div class="buttons">
+        <button type="button" class="btn" id="yesBtn">Yes</button>
+        <button type="button" class="btn btn-no" id="noBtn">No</button>
+      </div>
+    </div>
+    <div class="success" id="successState">
+      <h2>Yay! I love you!</h2>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const yesBtn = document.getElementById('yesBtn');
+      const noBtn = document.getElementById('noBtn');
+      const initialState = document.querySelector('.initial-state');
+      const successState = document.getElementById('successState');
+
+      function getRandomPosition() {
+        const btnRect = noBtn.getBoundingClientRect();
+        const padding = 16;
+
+        const maxX = window.innerWidth - btnRect.width - padding * 2;
+        const maxY = window.innerHeight - btnRect.height - padding * 2;
+
+        const x = Math.max(padding, Math.random() * maxX);
+        const y = Math.max(padding, Math.random() * maxY);
+
+        return { x, y };
+      }
+
+      function moveNoButton() {
+        if (!noBtn.classList.contains('escaping')) {
+          const rect = noBtn.getBoundingClientRect();
+          noBtn.classList.add('escaping');
+          noBtn.style.left = rect.left + 'px';
+          noBtn.style.top = rect.top + 'px';
+        }
+        const { x, y } = getRandomPosition();
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+      }
+
+      noBtn.addEventListener('mouseenter', moveNoButton);
+      noBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        moveNoButton();
+      });
+
+      yesBtn.addEventListener('click', function () {
+        initialState.classList.add('hidden');
+        successState.classList.add('visible');
+      });
+    })();
+  </script>
+</body>
+</html>
